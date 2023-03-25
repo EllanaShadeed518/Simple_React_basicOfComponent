@@ -3,7 +3,8 @@
 2)render list or array use map function and arrow function 
 3)conditional rendering
 4)handle event and how to pass argument 
-5)how to update the state variable*/ 
+5)how to update the state variable
+6)how to use filter methode*/ 
 import React,{ Component } from 'react';
 
 import { getMovies } from './faceMovies';
