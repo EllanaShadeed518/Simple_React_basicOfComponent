@@ -8,7 +8,7 @@
 import React,{ Component } from 'react';
 
 import { getMovies } from './faceMovies';
-
+import Like from './Common/like';
 class Movies extends Component {
     state = { 
         movies:getMovies(),
@@ -33,6 +33,20 @@ class Movies extends Component {
        }
      
      }
+     handleLike=(movie)=>{
+    let index=this.state.movies.indexOf(movie);
+    if(movie.liked==true){
+      movie.liked=false;
+    }
+    else{
+      movie.liked=true;
+    }
+    let result=this.state.movies;
+    console.log(result);
+    this.setState({movies:result});
+   
+
+    }
     render() {
         
         return (
@@ -46,7 +60,7 @@ class Movies extends Component {
       <th scope="col">Title</th>
       <th scope="col">Gerne</th>
       <th scope="col">Stock</th>
-      <th scope="col">Rate</th>
+      <th scope="col">Rate</th><th></th>
       <th scope="col">Operation</th>
     </tr>
   </thead>
@@ -58,6 +72,7 @@ class Movies extends Component {
         <td>{movie.gener}</td>
         <td>{movie.stock}</td>
         <td>{movie.Rate}</td>
+        <td><Like onClick={()=>this.handleLike(movie)} liked={movie.liked}/></td>
        <td> <button onClick={()=>this.HandleDelete({movie})} type="button" className='btn btn-danger btn-sm ' aria-label="Close">DELETE</button></td>
     </tr>)}
        
