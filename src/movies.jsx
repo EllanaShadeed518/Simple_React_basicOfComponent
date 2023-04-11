@@ -9,10 +9,13 @@ import React,{ Component } from 'react';
 
 import { getMovies } from './faceMovies';
 import Like from './Common/like';
+import Pagination from './Common/Pagination';
 class Movies extends Component {
     state = { 
         movies:getMovies(),
-        message:"There is no Movies to display"
+        message:"There is no Movies to display",
+        pageSize:2,
+        currentPage:1,
      } 
 
      HandleDelete =(movie)=>{
@@ -82,8 +85,14 @@ class Movies extends Component {
    
    
   
-</table></div>
+</table><Pagination count={this.state.movies.length}  onPageChange={this.handlePage} currentPage={this.state.currentPage}pageSize={this.state.pageSize}/>
+</div>
         );
+    }
+
+    handlePage=(page)=>{
+    
+       this.setState({currentPage:page});
     }
 }
  
