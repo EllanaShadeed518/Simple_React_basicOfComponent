@@ -26,7 +26,33 @@ liked:true,
     stock:7,
     liked:true,
     Rate:3.5,},
-    
+    {
+    id:"4",
+    title:"Loves",
+    gener:"d",
+    stock:7,
+    liked:true,
+    Rate:3.5,},{
+    id:"5",
+    title:"Loves",
+    gener:"b",
+    stock:7,
+    liked:true,
+    Rate:3.5,},
+    {
+        id:"6",
+        title:"Loves",
+        gener:"b",
+        stock:7,
+        liked:true,
+        Rate:3.5,},
+        {
+            id:"7",
+            title:"Loves",
+            gener:"b",
+            stock:7,
+            liked:true,
+            Rate:3.5,},
 
 ];
 export function getMovies(){

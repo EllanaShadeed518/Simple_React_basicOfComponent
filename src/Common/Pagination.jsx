@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import PropTypes from 'prop-types';//to make validate of data 
 class Pagination extends Component {
     
     render() { 
@@ -25,6 +26,13 @@ if(pageCount==1){
         );
     }
     
-}
+}//make validation for all prameter props 
+Pagination.propTypes={
+count:PropTypes.number.isRequired,
+pageSize:PropTypes.number.isRequired,
+currentPage:PropTypes.number.isRequired,
+onPageChange:PropTypes.func.isRequired,
+
+};
  
 export default Pagination;

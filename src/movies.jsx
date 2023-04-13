@@ -6,17 +6,30 @@
 5)how to update the state variable
 6)how to use filter methode*/ 
 import React,{ Component } from 'react';
-
+import ListGroup from './Common/ListGroup';
 import { getMovies } from './faceMovies';
 import Like from './Common/like';
 import Pagination from './Common/Pagination';
+import { paginate } from './paginate';
+import { getGeners } from './geners';
+
 class Movies extends Component {
     state = { 
-        movies:getMovies(),
+       // movies:getMovies(),
+       //another way beacuse data take some time from server you should write empty array and use componentDidmount to get data 
+       movies:[],
         message:"There is no Movies to display",
         pageSize:2,
         currentPage:1,
+        currentGener:"All Geners",
+        geners:[],
      } 
+//i want to add all geners so how to do this??look to the first line in componentDidMount>>i want to render all geners array(...geners) and add new object All geners but without id beacuse this is not store in database just like button to display all geners
+
+     componentDidMount(){
+const AllGeners=[{gener:"All Geners"},...getGeners()];
+      this.setState({movies:getMovies(),geners:AllGeners});
+     }
 
      HandleDelete =(movie)=>{
         const id=movie.movie.id;
@@ -51,10 +64,20 @@ class Movies extends Component {
 
     }
     render() {
-        
+      const filteredGenere=this.state.currentGener && this.state.currentGener!="All Geners"?this.state.movies.filter(m=>m.gener===this.state.currentGener):this.state.movies;
+      
+     console.log(this.state.currentGener.id);
+    
+      const paginateMovies=paginate(filteredGenere,this.state.pageSize,this.state.currentPage);
         return (
-            <div>
-            <h4>{this.message()}</h4>   
+            <div className="row">
+              <div className="col-sm-4">
+                <ListGroup items={this.state.geners} genereName="a" genereId="1"  currentGener={this.state.currentGener}onGenerSelect={this.generSelect}/>
+              </div>
+              <div className="col-sm-8">
+
+             
+            <p>{filteredGenere.length}Movies In DataBase</p> 
 <table className="table">
   <thead>
     
@@ -69,7 +92,7 @@ class Movies extends Component {
   </thead>
   <tbody>
     
-      {this.state.movies.map(movie=> <tr key={movie.id}>
+      {paginateMovies.map(movie=> <tr key={movie.id}>
         
         <td>{movie.title}</td>
         <td>{movie.gener}</td>
@@ -85,14 +108,21 @@ class Movies extends Component {
    
    
   
-</table><Pagination count={this.state.movies.length}  onPageChange={this.handlePage} currentPage={this.state.currentPage}pageSize={this.state.pageSize}/>
+</table><Pagination count={filteredGenere.length}  onPageChange={this.handlePage} currentPage={this.state.currentPage} pageSize={this.state.pageSize}/></div>
 </div>
         );
     }
 
     handlePage=(page)=>{
-    
+ 
+
        this.setState({currentPage:page});
+       
+
+    }
+
+   generSelect=(item)=>{
+    this.setState({currentGener:item.gener})
     }
 }
  
