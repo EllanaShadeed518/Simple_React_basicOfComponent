@@ -3,7 +3,7 @@
 id:"0",
 title:"Terminator",
 gener:"a",
-stock:6,
+stock:7,
 Rate:2.5,
 liked:true,
     },

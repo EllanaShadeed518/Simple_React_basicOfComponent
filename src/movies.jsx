@@ -12,6 +12,8 @@ import Like from './Common/like';
 import Pagination from './Common/Pagination';
 import { paginate } from './paginate';
 import { getGeners } from './geners';
+import MoviesTable from './Common/MoviesTable';
+import _ from 'lodash';
 
 class Movies extends Component {
     state = { 
@@ -22,22 +24,48 @@ class Movies extends Component {
         pageSize:2,
         currentPage:1,
         currentGener:"All Geners",
+        SortColumn:{path:'title',order:'asc'},
         geners:[],
      } 
 //i want to add all geners so how to do this??look to the first line in componentDidMount>>i want to render all geners array(...geners) and add new object All geners but without id beacuse this is not store in database just like button to display all geners
 
      componentDidMount(){
-const AllGeners=[{gener:"All Geners"},...getGeners()];
+const AllGeners=[{id:"",gener:"All Geners"},...getGeners()];
       this.setState({movies:getMovies(),geners:AllGeners});
      }
 
      HandleDelete =(movie)=>{
-        const id=movie.movie.id;
+      console.log(movie);
+        const id=movie.id;
         let result=this.state.movies.filter(m=>m.id!==id );
         this.setState({movies:result});
         
 
        
+     }
+
+     HandleSort=(path)=>{
+      const Sort={...this.state.SortColumn};
+      if(Sort.path===path){
+       Sort.order= Sort.order==='asc'?'desc':'asc';
+      }
+      else{
+        Sort.path=path;
+    Sort.order='asc';
+      }
+      this.setState({SortColumn:Sort});
+    }
+      HandleIconSort=(path)=>{
+        const Sort={...this.state.SortColumn};
+        if(Sort.path!==path){
+         return null;}
+         if(Sort.order==='asc'){
+         return <i class="fa fa-sort-asc" ></i>
+        }
+        else{return <i class="fa fa-sort-desc"></i>
+          
+      }
+
      }
      message(){
        if(this.state.movies.length===0){
@@ -66,9 +94,10 @@ const AllGeners=[{gener:"All Geners"},...getGeners()];
     render() {
       const filteredGenere=this.state.currentGener && this.state.currentGener!="All Geners"?this.state.movies.filter(m=>m.gener===this.state.currentGener):this.state.movies;
       
-     console.log(this.state.currentGener.id);
+     const SortedMovies=_.orderBy(filteredGenere,[this.state.SortColumn.path],[this.state.SortColumn.order]);
+     console.log(SortedMovies);
     
-      const paginateMovies=paginate(filteredGenere,this.state.pageSize,this.state.currentPage);
+      const paginateMovies=paginate(SortedMovies,this.state.pageSize,this.state.currentPage);
         return (
             <div className="row">
               <div className="col-sm-4">
@@ -78,37 +107,8 @@ const AllGeners=[{gener:"All Geners"},...getGeners()];
 
              
             <p>{filteredGenere.length}Movies In DataBase</p> 
-<table className="table">
-  <thead>
-    
-    <tr>
-    
-      <th scope="col">Title</th>
-      <th scope="col">Gerne</th>
-      <th scope="col">Stock</th>
-      <th scope="col">Rate</th><th></th>
-      <th scope="col">Operation</th>
-    </tr>
-  </thead>
-  <tbody>
-    
-      {paginateMovies.map(movie=> <tr key={movie.id}>
-        
-        <td>{movie.title}</td>
-        <td>{movie.gener}</td>
-        <td>{movie.stock}</td>
-        <td>{movie.Rate}</td>
-        <td><Like onClick={()=>this.handleLike(movie)} liked={movie.liked}/></td>
-       <td> <button onClick={()=>this.HandleDelete({movie})} type="button" className='btn btn-danger btn-sm ' aria-label="Close">DELETE</button></td>
-    </tr>)}
-       
-    
-  </tbody>
-
-   
-   
-  
-</table><Pagination count={filteredGenere.length}  onPageChange={this.handlePage} currentPage={this.state.currentPage} pageSize={this.state.pageSize}/></div>
+            <MoviesTable OnSort={this.HandleSort} SortIcon={this.HandleIconSort} OnDelete={this.HandleDelete} OnLike={this.handleLike}paginateMovies={paginateMovies}/>
+<Pagination count={filteredGenere.length}  onPageChange={this.handlePage} currentPage={this.state.currentPage} pageSize={this.state.pageSize}/></div>
 </div>
         );
     }
